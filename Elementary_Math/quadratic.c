@@ -22,7 +22,7 @@ typedef struct
   int x0;
 }Lfunc;
 
-/* fxの頂点を求める */
+/* 二次関数fxの頂点を求める */
 Dot apex(Sfunc fx)
 {
   Dot p;
@@ -34,7 +34,7 @@ Dot apex(Sfunc fx)
   return p;
 }
 
-/* fxの軸を求める */
+/* 二次関数fxの軸を求める */
 int axis(Sfunc fx)
 {
   int a=fx.x2;
@@ -43,7 +43,7 @@ int axis(Sfunc fx)
   return -b/(2*a);  
 }
 
-/* 判別式  正->交点2個 0->交点1個 負->交点0個*/
+/* 判別式(正->交点2個 0->交点1個 負->交点0個)*/
 int disc(Sfunc fx)
 {
   int a=fx.x2;
@@ -67,7 +67,7 @@ Sfunc p_disp(Sfunc fx,int x,int y)
   return fx;
 }
 
-/* 対称移動(fxをx軸に関して対称移動) */
+/* 対称移動(二次関数fxをx軸に関して対称移動) */
 Sfunc lx_smtr(Sfunc fx)
 {
   int a=fx.x2;
@@ -79,7 +79,7 @@ Sfunc lx_smtr(Sfunc fx)
   return fx;
 }
 
-/* 対称移動(fxをy軸に関して対称移動) */
+/* 対称移動(二次関数fxをy軸に関して対称移動) */
 Sfunc ly_smtr(Sfunc fx)
 {
   int a=fx.x2;
@@ -91,7 +91,7 @@ Sfunc ly_smtr(Sfunc fx)
   return fx;
 }
 
-/* 対称移動fxをy=xに関して対称移動 */
+/* 対称移動(二次関数fxをy=xに関して対称移動) */
 Sfunc lxy_smtr(Sfunc fx)
 {
   int a=fx.x2;

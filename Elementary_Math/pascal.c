@@ -1,3 +1,5 @@
+/* パスカルの三角形(二項定理) */
+
 int pascal(int n,int k)
 {
     if(k==0||n==k)

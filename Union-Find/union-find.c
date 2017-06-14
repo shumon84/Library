@@ -1,8 +1,10 @@
-int union_find_par[MAX_N];
-int union_find_rank[MAX_N];
+#define UNION_FIND_MAX_N
+int union_find_par[UNION_FIND_MAX_N];
+int union_find_rank[UNION_FIND_MAX_N];
 
 void init(int n)
 {
+  int i;
   for(i=0;i<n;i++)
     {
       union_find_par[i]=i;
@@ -23,7 +25,7 @@ void unite(int x,int y)
   x=find(x);
   y=find(y);
   if(x==y)
-    return x;
+    return;
   if(union_find_rank[x]<union_find_rank[y])
     union_find_par[x]=y;
   else

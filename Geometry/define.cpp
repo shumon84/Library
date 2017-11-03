@@ -21,7 +21,8 @@ struct Line : public vector<Point>
 {
   Line(const Point &a, const Point &b)
   {
-   push_back(a); push_back(b);
+    push_back(a);
+    push_back(b);
   }
 };
 // 線分 Segment hoge(Point(a,b),Point(c,d)); 点(a,b),(c,d)を端点に持つ線分
@@ -29,15 +30,16 @@ struct Segment : public vector<Point>
 {
   Segment(const Point &a, const Point &b)
   {
-   push_back(a); push_back(b);
+    push_back(a);
+    push_back(b);
   }
 };
 // 円 Circle hoge(Point(a,b),r); 中心(a,b)、半径rの円
 struct Circle
 {
   Point c;
-  double r;
-  Circle(const Point &c,double r):c(c),r(r){}
+  Real r;
+  Circle(const Point &c,Real r):c(c),r(r){}
 };
 
 namespace std
@@ -46,8 +48,24 @@ namespace std
   {
     return real(a) != real(b) ? real(a) < real(b) : imag(a) < imag(b);
   }
+  bool operator <= (const Point& a, const Point& b)
+  {
+    return real(a) != real(b) ? real(a) <= real(b) : imag(a) <= imag(b);
+  }
+  bool operator > (const Point& a, const Point& b)
+  {
+    return real(a) != real(b) ? real(a) > real(b) : imag(a) > imag(b);
+  }
+  bool operator >= (const Point& a, const Point& b)
+  {
+    return real(a) != real(b) ? real(a) >= real(b) : imag(a) >= imag(b);
+  }
   bool operator == (const Point& a, const Point& b)
   {
     return a.real()==b.real()&&a.imag()==b.imag();
+  }
+  bool operator != (const Point& a, const Point& b)
+  {
+    return a.real()!=b.real()&&a.imag()!=b.imag();
   }
 }

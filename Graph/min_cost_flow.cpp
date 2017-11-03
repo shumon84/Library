@@ -1,3 +1,4 @@
+// 最小費用流
 #include<vector>
 #include<cstring>
 
@@ -23,7 +24,7 @@ int prevv[MAX_V],preve[MAX_V]; // 直前の頂点と辺
 void add_edge(int from,int to,int cap,int cost)
 {
   G[from].push_back((edge){to,cap,cost,(int)G[to].size()});
-  G[to].push_back((edge){from,0,cost,(int)G[from].size()});
+  G[to].push_back((edge){from,0,-cost,(int)G[from].size()-1});
 }
 
 // sからtへの流量fの最小費用流を求める(流せない場合は-1)
@@ -58,12 +59,18 @@ int min_cost_flow(int s,int t,int f)
       if(d[t]==INF)
 	return -1;
       
-      int d=f;
+      int dc=f;
+      for(int v=t;v!=s;v=prevv[v])
+	dc=min(dc,G[prevv[v]][preve[v]].cap);
+
+      f-=dc;
+      res+=dc*d[t];
+
       for(int v=t;v!=s;v=prevv[v])
 	{
 	  edge &e=G[prevv[v]][preve[v]];
-	  e.cap-=d;
-	  G[v][e.rev].cap+=d;
+	  e.cap-=dc;
+	  G[v][e.rev].cap+=dc;
 	}
     }
   return res;

@@ -18,13 +18,29 @@ public:
   T begin() const;
   T end() const;
   void sort();
+  void reverse();
+  void dump();
   void set(const int z);
   void reset();
   T operator [](const int i) const;
   T &operator [](const int i);
   operator const T*() const;
   loop_array<T> &operator =(const loop_array<T> &other);
+  T *operator +(const int right) const;
+  T *operator -(const int right) const;
 };
+
+template<typename T>
+T *loop_array<T>::operator +(const int right) const
+{
+  return array+right;
+}
+
+template<typename T>
+T *loop_array<T>::operator -(const int right) const
+{
+  return array-right;
+}
 
 template<typename T>
 bool loop_array<T>::is_valid() const
@@ -47,7 +63,9 @@ loop_array<T>::operator const T*() const
 template<typename T>
 loop_array<T>::loop_array(size_t n)
 {
-  loop_array(n,0);
+  array=new T[n];
+  sum=n;
+  set(0);
 }
 
 template<typename T>
@@ -74,10 +92,10 @@ loop_array<T>::~loop_array()
 template<typename T>
 int loop_array<T>::Index(const int index) const
 {
-  if(index>=0)
+  if(zero+index>=0)
     return (zero+index)%sum;
   else
-    return (zero+(sum-abs(index)%sum))%sum;
+    return (zero+(sum-std::abs(index)%sum))%sum;
 }
 
 template<typename T>
@@ -87,9 +105,41 @@ void loop_array<T>::set(const int z)
 }
 
 template<typename T>
-void loop_array<T>::reset()
+T loop_array<T>::begin() const
 {
-  zero=0;
+  return this[0];
+}
+
+template<typename T>
+T loop_array<T>::end() const
+{
+  return this[size()-1];
+}
+
+template<typename T>
+void loop_array<T>::sort()
+{
+  std::sort(array,array+sum);
+  set(0);
+}
+
+template<typename T>
+void loop_array<T>::reverse()
+{
+  int i;
+  int n=size()/2;
+  for(i=0;i<n;i++)
+    std::swap(this[i],this[size()-i-1]);
+}
+
+template<typename T>
+void loop_array<T>::dump()
+{
+#ifdef DEBUG
+  int i;
+  for(i=0;i<size();i++)
+    std::cout<<"this["<<i<<"]"<<" = "<<this[i];
+#endif
 }
 
 template<typename T>

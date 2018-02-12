@@ -1,18 +1,20 @@
 #include<algorithm>
+#include<iostream>
 template<typename T>
-class loop_array{
+class RingBuffer{
   T *array;
   size_t sum;
   int zero;
+  bool rev;
   int Index(const int index) const;
   void Init();
   void Release();
 public:
-  explicit loop_array(size_t n);
-  loop_array(size_t n,int z);
-  loop_array(loop_array<T> &other);
-  virtual ~loop_array();
-  bool Copy(const loop_array<T> &other);
+  explicit RingBuffer(size_t n);
+  RingBuffer(size_t n,int z);
+  RingBuffer(RingBuffer<T> &other);
+  virtual ~RingBuffer();
+  bool copy(const RingBuffer<T> &other);
   bool is_valid() const;
   size_t size() const;
   T begin() const;
@@ -25,137 +27,147 @@ public:
   T operator [](const int i) const;
   T &operator [](const int i);
   operator const T*() const;
-  loop_array<T> &operator =(const loop_array<T> &other);
+  RingBuffer<T> &operator =(const RingBuffer<T> &other);
   T *operator +(const int right) const;
   T *operator -(const int right) const;
 };
 
 template<typename T>
-T *loop_array<T>::operator +(const int right) const
+T *RingBuffer<T>::operator +(const int right) const
 {
-  return array+right;
+  return *array[right];
 }
 
 template<typename T>
-T *loop_array<T>::operator -(const int right) const
+T *RingBuffer<T>::operator -(const int right) const
 {
-  return array-right;
+  return *array[-right];
 }
 
 template<typename T>
-bool loop_array<T>::is_valid() const
+bool RingBuffer<T>::is_valid() const
 {
   return array!=NULL;
 }
 
 template<typename T>
-size_t loop_array<T>::size() const
+size_t RingBuffer<T>::size() const
 {
   return sum;
 }
 
 template<typename T>
-loop_array<T>::operator const T*() const
+RingBuffer<T>::operator const T*() const
 {
   return array;
 }
 
 template<typename T>
-loop_array<T>::loop_array(size_t n)
+RingBuffer<T>::RingBuffer(size_t n)
 {
   array=new T[n];
   sum=n;
   set(0);
+  rev=true;
 }
 
 template<typename T>
-loop_array<T>::loop_array(size_t n,int z)
+RingBuffer<T>::RingBuffer(size_t n,int z)
 {
   array=new T[n];
   sum=n;
   set(z);
+  rev=true;
 }
 
 template<typename T>
-loop_array<T>::loop_array(loop_array<T> &other)
+RingBuffer<T>::RingBuffer(RingBuffer<T> &other)
 {
   Init();
-  Copy(other);
+  copy(other);
 }
 
 template<typename T>
-loop_array<T>::~loop_array()
+RingBuffer<T>::~RingBuffer()
 {
   Release();
 }
 
 template<typename T>
-int loop_array<T>::Index(const int index) const
+int RingBuffer<T>::Index(const int index) const
 {
-  if(zero+index>=0)
-    return (zero+index)%sum;
+  int i;
+  if(rev==true)
+    i=index;
   else
-    return (zero+(sum-std::abs(index)%sum))%sum;
+    i=-(index+1);
+  if(zero+i>=0)
+    return (zero+i)%sum;
+  else
+    return (zero+(sum-std::abs(i)%sum))%sum;
 }
 
 template<typename T>
-void loop_array<T>::set(const int z)
+void RingBuffer<T>::set(const int z)
 {
   zero=Index(z);
 }
 
 template<typename T>
-T loop_array<T>::begin() const
+void RingBuffer<T>::reset()
+{
+  zero=0;
+}
+
+template<typename T>
+T RingBuffer<T>::begin() const
 {
   return this[0];
 }
 
 template<typename T>
-T loop_array<T>::end() const
+T RingBuffer<T>::end() const
 {
   return this[size()-1];
 }
 
 template<typename T>
-void loop_array<T>::sort()
+void RingBuffer<T>::sort()
 {
   std::sort(array,array+sum);
   set(0);
 }
 
 template<typename T>
-void loop_array<T>::reverse()
+void RingBuffer<T>::reverse()
 {
-  int i;
-  int n=size()/2;
-  for(i=0;i<n;i++)
-    std::swap(this[i],this[size()-i-1]);
+  rev=!rev;
 }
 
 template<typename T>
-void loop_array<T>::dump()
+void RingBuffer<T>::dump()
 {
 #ifdef DEBUG
   int i;
   for(i=0;i<size();i++)
-    std::cout<<"this["<<i<<"]"<<" = "<<this[i];
+    std::cout<<"this["<<i<<"]"<<" = "<<(*this)[i]<<std::endl;
 #endif
 }
 
 template<typename T>
-T &loop_array<T>::operator [](int index)
+T &RingBuffer<T>::operator [](int index)
 {
   return array[Index(index)];
 }
 
 template<typename T>
-T loop_array<T>::operator [](int index) const
+T RingBuffer<T>::operator [](int index) const
 {
   return array[Index(index)];
 }
 
 template<typename T>
-bool loop_array<T>::Copy(const loop_array<T> &other)
+bool RingBuffer<T>::copy(const RingBuffer<T> &other)
 {
   if(this==&other)
     return true;
@@ -169,6 +181,7 @@ bool loop_array<T>::Copy(const loop_array<T> &other)
         return false;
       zero=other.zero;
       sum=other.size();
+      rev=other.rev;
       for(int i=0;i<sum;i++)
         array=other[i];
     }
@@ -176,22 +189,23 @@ bool loop_array<T>::Copy(const loop_array<T> &other)
 }
 
 template<typename T>
-loop_array<T> &loop_array<T>::operator =(const loop_array<T> &other)
+RingBuffer<T> &RingBuffer<T>::operator =(const RingBuffer<T> &other)
 {
-  Copy(other);
+  copy(other);
   return *this;
 }
 
 template <typename T>
-void loop_array<T>::Init()
+void RingBuffer<T>::Init()
 {
   array=NULL;
   sum=0;
   zero=0;
+  rev=true;
 }
 
 template<typename T>
-void loop_array<T>::Release()
+void RingBuffer<T>::Release()
 {
   if(is_valid()==true)
     {

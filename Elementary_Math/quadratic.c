@@ -13,38 +13,37 @@ typedef struct
   int x2;
   int x1;
   int x0;
-}Sfunc;
+}SFunc;
 
 /* 一次関数の係数 */
 typedef struct
 {
   int x1;
   int x0;
-}Lfunc;
+}LFunc;
 
 /* 二次関数fxの頂点を求める */
-Dot apex(Sfunc fx)
+Dot apex(SFunc fx)
 {
   Dot p;
   int a=fx.x2;
   int b=fx.x1;
   int c=fx.x0;
-  p.x=-b/2a;
+  p.x=-b/2*a;
   p.y=-(b*b-4*a*c)/4*a;
   return p;
 }
 
 /* 二次関数fxの軸を求める */
-int axis(Sfunc fx)
+int axis(SFunc fx)
 {
   int a=fx.x2;
   int b=fx.x1;
-  int c=fx.x0;
-  return -b/(2*a);  
+  return -b/(2*a);
 }
 
 /* 判別式(正->交点2個 0->交点1個 負->交点0個)*/
-int disc(Sfunc fx)
+int disc(SFunc fx)
 {
   int a=fx.x2;
   int b=fx.x1;
@@ -56,7 +55,7 @@ int disc(Sfunc fx)
 #define dirc(fx) fx.x2<0
 
 /* 平行移動(fxをx軸の正の向きにx、y軸の正の向きにy移動)*/
-Sfunc p_disp(Sfunc fx,int x,int y)
+SFunc p_disp(SFunc fx,int x,int y)
 {
   int a=fx.x2;
   int b=fx.x1;
@@ -68,7 +67,7 @@ Sfunc p_disp(Sfunc fx,int x,int y)
 }
 
 /* 対称移動(二次関数fxをx軸に関して対称移動) */
-Sfunc lx_smtr(Sfunc fx)
+SFunc lx_smtr(SFunc fx)
 {
   int a=fx.x2;
   int b=fx.x1;
@@ -80,7 +79,7 @@ Sfunc lx_smtr(Sfunc fx)
 }
 
 /* 対称移動(二次関数fxをy軸に関して対称移動) */
-Sfunc ly_smtr(Sfunc fx)
+SFunc ly_smtr(SFunc fx)
 {
   int a=fx.x2;
   int b=fx.x1;
@@ -92,7 +91,7 @@ Sfunc ly_smtr(Sfunc fx)
 }
 
 /* 対称移動(二次関数fxをy=xに関して対称移動) */
-Sfunc lxy_smtr(Sfunc fx)
+SFunc lxy_smtr(SFunc fx)
 {
   int a=fx.x2;
   int b=fx.x1;
